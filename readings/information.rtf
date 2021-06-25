@@ -8,6 +8,11 @@
 \f0\fs24 \cf0 https://seaborn.pydata.org/api.html#relational-api\
 \
 \
+House Pridictions:\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://www.kaggle.com/letmedog/location-location-location"}}{\fldrslt \cf0 https://www.kaggle.com/letmedog/location-location-location}}\
+\
+\
 \
 Blog About House Price Predictions Using Linear Regression\
 \
@@ -30,11 +35,24 @@ Encoders:\
 \
 \
 Scaling:\
-{\field{\*\fldinst{HYPERLINK "https://towardsdatascience.com/all-about-feature-scaling-bcc0ad75cb35"}}{\fldrslt https://towardsdatascience.com/all-about-feature-scaling-bcc0ad75cb35}}\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://towardsdatascience.com/all-about-feature-scaling-bcc0ad75cb35"}}{\fldrslt \cf0 https://towardsdatascience.com/all-about-feature-scaling-bcc0ad75cb35}}\
 \
 Encoders:\
-{\field{\*\fldinst{HYPERLINK "https://towardsdatascience.com/all-about-categorical-variable-encoding-305f3361fd02"}}{\fldrslt https://towardsdatascience.com/all-about-categorical-variable-encoding-305f3361fd02}}\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://towardsdatascience.com/all-about-categorical-variable-encoding-305f3361fd02"}}{\fldrslt \cf0 https://towardsdatascience.com/all-about-categorical-variable-encoding-305f3361fd02}}\
 \
 \
 Variance and covariance matrix:\
-{\field{\*\fldinst{HYPERLINK "https://datascienceplus.com/understanding-the-covariance-matrix/"}}{\fldrslt https://datascienceplus.com/understanding-the-covariance-matrix/}}}
+{\field{\*\fldinst{HYPERLINK "https://datascienceplus.com/understanding-the-covariance-matrix/"}}{\fldrslt https://datascienceplus.com/understanding-the-covariance-matrix/}}\
+\
+\
+Rmse:\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://towardsdatascience.com/what-does-rmse-really-mean-806b65f2e48e"}}{\fldrslt \cf0 https://towardsdatascience.com/what-does-rmse-really-mean-806b65f2e48e}}\
+\
+\
+\
+ct = ColumnTransformer([("POSTED_BY",OneHotEncoder(),[0]),("BHK_OR_RK",OneHotEncoder(),[4])],remainder='passthrough')\
+x = ct.fit_transform(x)\
+x}
