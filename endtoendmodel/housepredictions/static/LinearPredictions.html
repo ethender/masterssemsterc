@@ -23,9 +23,9 @@
     <div class="form-group">
         <label for="postedby">Posted By</label>
         <select class="form-control" id="postedby" name="postedby">
-            <option>Owner</option>
-            <option>Dealer</option>
-            <option>Builder</option>
+            <option value="2">Owner</option>
+            <option value="1">Dealer</option>
+            <option value="0">Builder</option>
         </select>
     </div>
      <div class="form-group">
@@ -49,9 +49,13 @@
      <div class="form-group">
         <label for="bhkorrk">BHK OR RK</label>
         <select class="form-control" id="bhkorrk" name="bhkorrk">
-            <option value="BHK">BHK</option>
-            <option value="RK">RK</option>
+            <option value="0">BHK</option>
+            <option value="1">RK</option>
         </select>
+    </div>
+    <div class="form-group">
+        <label for="sqft">SQUARE FEET</label>
+        <input type="number" step="0.01" class="form-control" name="sqft" id="sqft">
     </div>
     <div class="form-group">
         <label for="readytomove">Ready To Move</label>
