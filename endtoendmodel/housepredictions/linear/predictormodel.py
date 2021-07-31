@@ -3,7 +3,8 @@ import pandas as pd
 import joblib
 import copy
 from sklearn.preprocessing import LabelEncoder
-
+import os
+from django.conf import Settings
 
 
 class PredictorModel:
@@ -14,8 +15,8 @@ class PredictorModel:
         self.model = ''
         self.data = []
         self.transformedData = []
-        self.pkl = '/Users/ethender/Developer/python/mastersproject/endtoendmodel/savedmodel/linearregression.pkl'
-        self.dataLoc = '/Users/ethender/Developer/python/mastersproject/data/prices/train.csv'
+        self.pkl = '../static/savedmodel/polynomial.pkl'
+        self.dataLoc = '../static/data/prices/train.csv'
         self.loadData()
         self.loadModel()
 
@@ -65,3 +66,6 @@ if __name__ == "__main__":
     sqyd = sqft/9
     record = [0,0,0,1,0,sqft,1,1,sqyd]
     print(predictor.predictModel(record))
+
+
+
