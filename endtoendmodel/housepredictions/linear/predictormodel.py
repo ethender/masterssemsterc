@@ -3,6 +3,7 @@ import pandas as pd
 import joblib
 import copy
 from sklearn.preprocessing import LabelEncoder
+from scipy import stats
 import os
 from django.conf import Settings
 
@@ -15,7 +16,7 @@ class PredictorModel:
         self.model = ''
         self.data = []
         self.transformedData = []
-        self.pkl = '../static/savedmodel/polynomial.pkl'
+        self.pkl = '../static/savedmodel/RandomForestRegression.pkl'
         self.dataLoc = '../static/data/prices/train.csv'
         self.loadData()
         self.loadModel()
@@ -57,6 +58,21 @@ class PredictorModel:
     def predictModel(self,record):
         return self.model.predict([record])
 
+    def confidenceInterval(self,predictedVal,confidenceLevel=0.95,isTwoSided=True):
+        std = round(np.std(self.data['TARGET_AMOUNT']),2)
+        lenOfData = len(self.data['TARGET_AMOUNT'])
+        standardError = std/np.sqrt(lenOfData)
+        alpha = 1-confidenceLevel
+        if isTwoSided:
+            alpha = alpha/2
+        degreesOfFreedom = lenOfData-1
+        tvalue = round(stats.t.ppf(alpha,degreesOfFreedom),2)
+        minusValue = predictedVal-tvalue*standardError
+        plusValue = predictedVal+tvalue*standardError
+        values = (round(minusValue[0],2),round(plusValue[0],2))
+        return values
+
+
 
 
 
@@ -65,7 +81,8 @@ if __name__ == "__main__":
     sqft = 545.1713396
     sqyd = sqft/9
     record = [0,0,0,1,0,sqft,1,1,sqyd]
-    print(predictor.predictModel(record))
-
+    predictedValue = predictor.predictModel(record)
+    print(predictedValue[0])
+    print(predictor.confidenceInterval(predictedValue,0.95))
 
 
