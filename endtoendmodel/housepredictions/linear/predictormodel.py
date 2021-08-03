@@ -8,21 +8,36 @@ import os
 from django.conf import Settings
 
 
+
 class PredictorModel:
 
+    def __init__(self,panadasData,model):
+        self.model = model
+        self.data = panadasData
+        self.transformedData = []
+        self.convertDataPandas()
+        '''print(self.data.head())
+        print('-'*50)
+        print(self.transformedData.head())'''
 
-
-    def __init__(self):
+    '''def __init__(self):
         self.model = ''
         self.data = []
         self.transformedData = []
-        self.pkl = '../static/savedmodel/RandomForestRegression.pkl'
-        self.dataLoc = '../static/data/prices/train.csv'
+        #self.pkl = '../static/savedmodel/RandomForestRegression.pkl'
+
+        #self.dataLoc = '../static/data/prices/train.csv'
         self.loadData()
-        self.loadModel()
+        self.loadModel()'''
 
     def loadModel(self):
         self.model = joblib.load(self.pkl)
+
+    def convertDataPandas(self):
+        self.data['STATE_OR_CITY'] = self.getCities()
+        self.data['SQUARE_YARD'] = self.convertSquareYard()
+        self.data['TARGET_AMOUNT'] = self.convertTargetinLakhs()
+        self.transformData()
 
     def loadData(self):
         self.data = pd.read_csv(self.dataLoc)
@@ -72,11 +87,15 @@ class PredictorModel:
         values = (round(minusValue[0],2),round(plusValue[0],2))
         return values
 
+    def getReport(self,record,confidenceLevel=0.95,isTwoSided=True):
+        predict = self.predictModel(record)
+        interval = self.confidenceInterval(predict,confidenceLevel,isTwoSided)
+        return {'predictedvalue':predict,'confidence':interval}
 
+    def getCitySimilarPrices(self,cityOrDistrict):
+        return ''
 
-
-
-if __name__ == "__main__":
+'''if __name__ == "__main__":
     predictor = PredictorModel()
     sqft = 545.1713396
     sqyd = sqft/9
@@ -84,5 +103,4 @@ if __name__ == "__main__":
     predictedValue = predictor.predictModel(record)
     print(predictedValue[0])
     print(predictor.confidenceInterval(predictedValue,0.95))
-
-
+'''
