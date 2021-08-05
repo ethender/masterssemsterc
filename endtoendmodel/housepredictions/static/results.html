@@ -17,9 +17,33 @@
     <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
 </head>
 <body>
+    {% load humanize %}
         <h1>D3</h1>
-        <p>Predicted: {{predictedvalue}}</p>
-        <p>High: {{confidence.0}}</p>
-        <p>Low: {{confidence.1}}</p>
+        <p>Predicted: &#8377; &nbsp;{{predictedvalue|intcomma}}</p>
+        <p>High: &#8377; &nbsp;{{confidence.0|intcomma}}</p>
+        <p>Low: &#8377; &nbsp;{{confidence.1|intcomma}}</p>
+
+    <table>
+        <tr>
+            <th>Model</th>
+            <th>Predicted Value</th>
+            <th>Confidence High</th>
+            <th>Confidence Low</th>
+            <th>Confidence Level</th>
+        </tr>
+        {% for key, value in modelsreport.items %}
+            <tr>
+                <td>{{key}}</td>
+                <td>&#8377; &nbsp;{{value.predictedvalue.0|floatformat:2|intcomma}}</td>
+                <td>&#8377; &nbsp;{{value.confidence.0|intcomma}}</td>
+                <td>&#8377; &nbsp;{{value.confidence.1|intcomma}}</td>
+                <td>95%</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <p>{{similardata}}</p>
+
+
 </body>
 </html>

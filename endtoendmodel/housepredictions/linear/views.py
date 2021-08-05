@@ -9,14 +9,17 @@ from django.templatetags.static import static
 from django.contrib.staticfiles import finders
 from django.contrib.staticfiles.storage import staticfiles_storage
 import pandas as pd
+import warnings
 import os
 
 # Create your views here.
 
 def home(request):
+    warnings.filterwarnings("ignore")
     return render(request,'LinearPredictions.html')
 
 def houseFeatures(request):
+    warnings.filterwarnings("ignore")
     posted_by = request.POST['postedby']
     underconstruction = int(request.POST['underconstruction'])
     rera = int(request.POST['rera'])
@@ -28,24 +31,33 @@ def houseFeatures(request):
     resale = int(request.POST['resale'])
     city = request.POST['city']
     rec = [posted_by,underconstruction,rera,bhkNo,bhkrk,sqft,readyToMove,resale,sqyard]
-    print(f'''Posted: {posted_by},underconstruction:{underconstruction},RERA:{rera},BHKNO:{bhkNo},BhkRK:{bhkrk},sqft:{sqft},Ready:{readyToMove},Resale:{resale},squareyard:{sqyard},city:{city}''')
+    #print(f'''Posted: {posted_by},underconstruction:{underconstruction},RERA:{rera},BHKNO:{bhkNo},BhkRK:{bhkrk},sqft:{sqft},Ready:{readyToMove},Resale:{resale},squareyard:{sqyard},city:{city}''')
 
     '''
         Loading Files
     '''
-    pklFile = staticfiles_storage.path('RandomForestRegression.pkl')
+    rfrPklFile = staticfiles_storage.path('RandomForestRegression.pkl')
+    etrPklFile = staticfiles_storage.path('extratreesregressor.pkl')
+    dtrPklFile = staticfiles_storage.path('DecisionTreeRegressor.pkl')
+    gbrPklFile = staticfiles_storage.path('gradientbosstingregressor.pkl')
+
     dataLoc = staticfiles_storage.path('train.csv')
     pandasData = pd.read_csv(dataLoc)
-    mlModel = joblib.load(pklFile)
+    #mlModel = joblib.load(pklFile)
+    rfrModel = joblib.load(rfrPklFile)
+    etrModel = joblib.load(etrPklFile)
+    dtrModel = joblib.load(dtrPklFile)
+    gbrModel = joblib.load(gbrPklFile)
+
+    models = {'rfr':rfrModel,'etr':etrModel,'dtr':dtrModel,'gbr':gbrModel}
 
     '''
         Model preparing
     '''
-    predctors = PredictorModel(pandasData,mlModel)
-    #sqft = 545.1713396
-    #sqyd = sqft / 9
-    #record = [0, 0, 0, 1, 0, sqft, 1, 1, sqyd]'''
+    predctors = PredictorModel(pandasData,models)
     result = predctors.getReport(rec,confidenceLevel=0.95,isTwoSided=True)
     result['predictedvalue'] = round(result['predictedvalue'][0],2)
+    result['modelsreport'] = predctors.getAllModelsReport(rec)
+    result['similardata'] = predctors.getCitySimilarPrices(city)
     return render(request,'results.html',context=result)
 

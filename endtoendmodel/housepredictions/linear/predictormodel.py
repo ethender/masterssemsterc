@@ -3,7 +3,10 @@ import pandas as pd
 import joblib
 import copy
 from sklearn.preprocessing import LabelEncoder
+from sklearn.ensemble import VotingRegressor
+from sklearn.model_selection import train_test_split
 from scipy import stats
+import warnings
 import os
 from django.conf import Settings
 
@@ -11,11 +14,14 @@ from django.conf import Settings
 
 class PredictorModel:
 
-    def __init__(self,panadasData,model):
-        self.model = model
+    def __init__(self,panadasData,models):
+        warnings.filterwarnings("ignore")
+        self.model = ""
+        self.models = models
         self.data = panadasData
         self.transformedData = []
         self.convertDataPandas()
+        self.combineAllModels()
         '''print(self.data.head())
         print('-'*50)
         print(self.transformedData.head())'''
@@ -30,8 +36,18 @@ class PredictorModel:
         self.loadData()
         self.loadModel()'''
 
-    def loadModel(self):
-        self.model = joblib.load(self.pkl)
+    '''def loadModel(self):
+        self.model = joblib.load(self.pkl)'''
+
+    def combineAllModels(self):
+        modelsList = []
+        for name, model in self.models.items():
+            modelsList.append((name,model))
+        self.model = VotingRegressor(modelsList)
+        x = self.transformedData.iloc[:,:-1]
+        y = self.transformedData.iloc[:,-1]
+        x_train,x_test,y_train,y_test = train_test_split(x,y,test_size=0.3)
+        self.model.fit(x_train,y_train)
 
     def convertDataPandas(self):
         self.data['STATE_OR_CITY'] = self.getCities()
@@ -92,8 +108,18 @@ class PredictorModel:
         interval = self.confidenceInterval(predict,confidenceLevel,isTwoSided)
         return {'predictedvalue':predict,'confidence':interval}
 
+    def getAllModelsReport(self,record):
+        report = {}
+        for name,model in self.models.items():
+            predict = model.predict([record])
+            conf = self.confidenceInterval(predict)
+            report[name] = {'predictedvalue':predict,'confidence':conf}
+        return report
+
     def getCitySimilarPrices(self,cityOrDistrict):
-        return ''
+        data = copy.deepcopy(self.data)
+        data['STATE_OR_CITY'] =  data['STATE_OR_CITY'].str.lower()
+        return data[data['STATE_OR_CITY'] == cityOrDistrict.lower()].to_json(orient='index')
 
 '''if __name__ == "__main__":
     predictor = PredictorModel()
