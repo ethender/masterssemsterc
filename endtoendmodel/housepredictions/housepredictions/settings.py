@@ -122,5 +122,6 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR,'static')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR,'static/data/prices/'),
-    os.path.join(BASE_DIR,'static/savedmodel/')
+    os.path.join(BASE_DIR,'static/savedmodel/'),
+    os.path.join(BASE_DIR,'static/css/'),
 ]
