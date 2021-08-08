@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% load staticfiles %}
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results</title>
+    <!-- Scripts -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jstat@latest/dist/jstat.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pandas-js@0.2.4/dist/index.min.js"></script>
+
+    <!-- Stylesheets -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static  'results.css' %}">
+
+</head>
+<body>
+{% load humanize %}
+    <div class="container-fluid">
+            <!-- Voting Regressor data-->
+        <div class="row">
+                <div class="col-md-6 divide">
+                        <p>
+                            <span>
+                                <h1>Predicted Values</h1><br>
+                                <small>Voting Regressor</small>
+                            </span>
+
+
+                              <table class="table">
+                                      <tr>
+                                         <td scope="row">Max price</td>
+                                        <td scope="col">&#8377; {{confidence.0|intcomma}}</td>
+                                      </tr>
+                                      <tr>
+                                        <td scope="row">Low price</td>
+                                        <td scope="col">&#8377; {{confidence.1|intcomma}}</td>
+                                      </tr>
+                                      <tr>
+                                        <td scope="row">Medium price</td>
+                                        <td scope="col">&#8377; {{predictedvalue|intcomma}}</td>
+                                      </tr>
+                              </table>
+                        </p>
+                </div>
+                <!-- Chart -->
+                <div class="col-md-6 divide">
+                        <div id="bellcurve"></div>
+                </div>
+        </div>
+        <!-- Other models predicted -->
+        <div class="row">
+            <div class="col-md-6 divide">
+                <h1>Other models predicted values</h1>
+                <table class="table">
+                        <tr>
+                                <th>Model Name</th>
+                                <th>Max Price</th>
+                                <th>Medium Price</th>
+                                <th>Low Price</th>
+                        </tr>
+                        {% for key,value in modelsreport.items %}
+                        <tr>
+                            <td scope="row">{{key}}</td>
+                            <td scope="col">&#8377; &nbsp;{{value.confidence.0|intcomma}}</td>
+                            <td scope="col">&#8377; &nbsp;{{value.predictedvalue.0|floatformat:2|intcomma}}</td>
+                            <td scope="col">&#8377; &nbsp;{{value.confidence.1|intcomma}}</td>
+                        </tr>
+                        {% endfor %}
+               </table>
+            </div>
+               <div class="col-md-6 divide">
+                        <div id="otherModelsGraph"></div>
+                </div>
+        </div>
+        <!-- Based on data divided -->
+        <div class="row">
+
+        </div>
+    </div>
+
+    <script type="text/javascript" src="{% static  'modelcharts.js' %}"></script>
+    <script>
+        finalResult(parseFloat({{confidence.0}}),parseFloat({{predictedvalue}}),parseFloat({{confidence.1}}));
+
+        var result = [];
+        result.push(['Model','High','Med','Low']);
+        {% for key,value in modelsreport.items  %}
+            result.push(["{{key}}",parseFloat({{value.confidence.0}}),parseFloat({{value.predictedvalue.0}}),parseFloat({{value.confidence.1}})]);
+        {% endfor %}
+
+        finalResultOtherModel(result);
+    </script>
+</body>
+</html>

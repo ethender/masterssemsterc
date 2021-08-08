@@ -49,7 +49,7 @@ def houseFeatures(request):
     dtrModel = joblib.load(dtrPklFile)
     gbrModel = joblib.load(gbrPklFile)
 
-    models = {'rfr':rfrModel,'etr':etrModel,'dtr':dtrModel,'gbr':gbrModel}
+    models = {'RandomForest':rfrModel,'ExtraTrees':etrModel,'DecisionTrees':dtrModel,'GradientBoosting':gbrModel}
 
     '''
         Model preparing
@@ -59,5 +59,5 @@ def houseFeatures(request):
     result['predictedvalue'] = round(result['predictedvalue'][0],2)
     result['modelsreport'] = predctors.getAllModelsReport(rec)
     result['similardata'] = predctors.getCitySimilarPrices(city)
-    return render(request,'results.html',context=result)
+    return render(request,'results2.html',context=result)
 

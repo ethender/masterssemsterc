@@ -1,0 +1,29 @@
+
+table{
+    border: 1px solid black;   
+}
+
+.divide{
+    border:1px solid black;
+}
+
+#bellcurve{
+    width: 500px;
+    height: 500px;
+    margin: 5px;
+  }
+
+  #otherModelsGraph{
+    width: 500px;
+    height: 500px;
+    margin: 5px;
+  }
+
+  h1{
+    font-family: 'EB Garamond', serif;
+    font-size: 40px;
+}
+
+body {
+    font-family: 'Noto Serif JP', serif;
+}
