@@ -4,3 +4,5 @@
 *.zip
 savedmodels/
 *.pkl
+#saving pkl files
+!savedmodels.zip
